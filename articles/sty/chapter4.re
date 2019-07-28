@@ -1,0 +1,1 @@
+= RubySliverを受けてRubyの全体像を掴む
