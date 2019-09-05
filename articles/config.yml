@@ -22,10 +22,10 @@ bookname: ReVIEW-Template
 language: ja
 
 # 書名
-booktitle: {name: "Rubyっぽいコード入門(仮称)", file-as: "reviewテンプレート"}
+booktitle: {name: "Rubyっぽいコード入門", file-as: "ルビーッポイコードニュウモン"}
 
 # 著者名。「, 」で区切って複数指定できる
-aut: [{name: "XXXX 編", file-as: "techboosterヘン"}]
+aut: [{name: "@kappaz 編", file-as: "マスイタカヒロヘン"}]
 
 # 以下はオプション
 # 以下はオプション(autと同じように配列書式で複数指定可能)。
@@ -56,7 +56,7 @@ edt: ["mhidaka"]
 # a-oth, oth: その他
 # a-pht, pht: 撮影責任者
 # a-pbl, pbl: 出版社（発行所）
-pbl: XXX
+pbl: かっぱ書房
 # a-prt, prt: 印刷所
 # prt: TechBooster
 # a-red, red: 項目の枠組起草者

@@ -8,6 +8,6 @@ CHAPS:
   - chapter4.re
   - chapter5.re
 APPENDIX:
-  - appendix.re
+  # - appendix.re
 POSTDEF:
   - contributors.re
