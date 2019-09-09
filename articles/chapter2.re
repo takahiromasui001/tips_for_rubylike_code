@@ -1,29 +1,31 @@
 = Rubocopでコードの見た目をRubyっぽくする
 「Rubyっぽい」コードを書くために最初に提案するのはRubocopの利用です。
+(https://github.com/rubocop-hq/rubocop)
 
-RubocopはRubyで最もよく利用されている、静的コード解析を実行するgem(*1)です。
-この空白はいらないよとか、この場合はこっちのメソッドを使った方がいいよ、といったことをアドバイスしてくれます。
+RubocopはRubyで最もよく利用されている、静的コード解析を実行するgem(Rubyのライブラリ)です。
+「この空白はいらないよ」とか「この場合はこっちのメソッドを使った方がいいよ」といったことをアドバイスしてくれます。
 コードの品質向上をサポートしてくれるとても頼もしいやつです。
 
-RubocopはRubyエンジニアであれば知らない人はほとんどいない、といっても過言ではないgemです。
+Rubocopは「Rubyエンジニアであれば知らない人はいない」といっても過言ではないgemです。
 従ってRubocopに沿ったコードは多くのRubyエンジニアにとって見慣れたものである可能性が高く、
 本書の目的である「Rubyっぽい」コードを目指す上で、最初に導入する内容としてもってこいです。
 まずはRubocopのアドバイスに従うことで「Rubyっぽい」コードを目指しましょう。
 
 ここからはRubocopの導入に関して以下の流れで段階的に説明していきます。
 
- * Rubocopによるコード修正の例
- * Rubocop導入前の注意点
- * Rubocopのインストール
- * Rubocopの実施
- * Rubocop指摘の修正方法
- * Rubocopのカスタマイズ
- * 既存プロジェクトへRubocopを適用する際の注意事項
+ 1. Rubocopによるコード修正の例
+ 2. Rubocop導入前の注意点
+ 3. Rubocopのインストール
+ 4. Rubocopの実施
+ 5. Rubocop指摘の修正方法
+ 6. Rubocopのカスタマイズ
+ 7. 既存プロジェクトへRubocopを適用する際の注意事項
+ 8. Rubocopを部分的に無効化する 
 
 == Rubocopによるコード修正の例
 まずRubocopを使うと具体的にはどのようにコードを「Ruby」っぽく出来るか見てみましょう。
 修正対象のサンプルコードとしては以下を用います。
-とても単純なコードですが、Rubyっぽくない点が多数存在しています。
+単純なコードですが、Rubyっぽくない点が多数存在しています。
 
 //list[rubocop_sample_before][target.rb: Rubyっぽくないコード]{
 a=1
@@ -48,7 +50,7 @@ end
 p d
 //}
 
-Rubocopの指摘を元にコードを修正すると以下のようになります。(Rubocopのデフォルト設定です)
+Rubocopの指摘を元にコードを修正すると以下のようになります。(Rubocopの設定はデフォルトです)
 
 //list[rubocop_sample_after][target_after_fix.rb: Rubocopによって修正したコード]{
 # frozen_string_literal: true
@@ -82,7 +84,8 @@ Rubocop導入前に2点ほど意識していただきたいことがあります
 本書ではRubocopを、自分が書いたコードを「Ruby」っぽくするという目的で利用しますが、
 これは一般的なRubocopの用途からは少しずれています。
 
-Rubocopは基本的にチーム開発におけるコーディングスタイルの統一を目的として利用されます。
+Rubocopは基本的にチーム開発におけるコーディングスタイルの統一を目的として利用されます。@<fn>{linter}
+//footnote[linter][こういったツールは一般的にlinterと呼ばれ大抵の言語に存在しています。]
 コーディングスタイルとはプログラムの書き方に関する約束事です。
 簡単な例で言えば、空白の数や改行、変数の名前、適切な文法などが挙げられます。
 仕事として行うプログラミングはたいてチームで行います。
@@ -93,16 +96,16 @@ Rubocopは基本的にチーム開発におけるコーディングスタイル�
 本来の用途は頭に入れておくと良いです。
 
 === チームの方針を優先すること
-前節の話とかぶる部分もありますが、コーディングスタイルはチーム毎独自にあるのが普通です。
+前節の話とかぶる部分もありますが、コーディングスタイルはチーム毎に異なるのが普通です。
 Rubocopを使わずに、チーム独自のコーディングスタイルが規定されているような場合もあると思いますが、
 その場合はチームの方針を優先しましょう。
 
 Rubocopを利用してより「Rubyっぽい」コードを目指すことにはもちろん価値があると思いますが、
-前節において説明したような、「チーム開発においてコードの品質を統一すること」の方がより優先されるべきです。
+前節において説明したような、「チーム開発においてコードの品質を統一すること」の方が優先されるべきです。
 
 もちろんチームの方針に反しない範囲でRubocopを導入するのも良いと思います。
-(むしろ周囲がRubocopを使っていないなら、相対的により「Rubyっぽいコード」を書ける可能性が高く、周囲に差がつけられます。
-あなたがもしRubocopを用いていない環境にいるならば、こっそり自分だけ使って見るのは良いアイデアかもしれません。)
+むしろ周囲がRubocopを使っていないなら、相対的により「Rubyっぽいコード」を書ける可能性が高く、周囲に差がつけられます。
+あなたがもしRubocopを用いていない環境にいるならば、こっそり自分だけ使って見るのは良いアイデアかもしれません。
 
 == Rubocopのインストール
 ここからRubocopを本格的に導入していきます。まずはRubocopのインストールに関して説明します。やり方は以下の2パターンです。
@@ -112,7 +115,7 @@ Rubocopを利用してより「Rubyっぽい」コードを目指すことには
 
 基本的にはGemfileに記載するのが良いと思います。
 ただチーム開発の環境で自分だけでRubocopを使いたいような場合には、
-(勝手にGemを追加できないと思いますので)gem installを用いるのも良いでしょう。
+(勝手にGemfileに追加できないと思いますので)gem installを用いるのも良いでしょう。
 もしくは両方やっても問題ありません。
 
 === Gemfileに記載(bundlerを利用)
@@ -122,16 +125,17 @@ gem 'rubocop', '~> 0.70.0', require: false
 //}
 
 Rubocopはバージョンによってチェックする内容が変わることが多々あります。
-後々bundle installによって意図せず変わってしまうことを避けるため、
-Gemfileにはバージョン指定も記載しておいた方が良いでしょう。
+後々bundle installによって意図せずにRubocopのバージョンが変わってしまうことを避けるため、
+Gemfileには指定バージョンも記載した方が良いでしょう。
 
-Railsを用いたプロジェクトのGemfileに記載する場合は、development以外で使うことはないと思いますので、
+Railsを用いたプロジェクトのGemfileに記載する場合は、開発環境以外で使うことはないと思いますので、
 //cmd{
 group 'development' do
   gem 'rubocop', '~> 0.70.0', require: false
 end
 //}
-のような書き方が良いでしょう。
+のような書き方が良いでしょう。このように設定することで、本番環境でRailsのアプリケーションを動かした際、
+使用しないRubocopが組み込まれることが無くなります。
 
 === gem install コマンド
 ターミナル上で以下のコマンドを実行するだけです。
@@ -168,7 +172,7 @@ $ rubocop -v
 0.74.0
 //}
 
-=== Rubocopを実際にやってみる 
+=== Rubocopを実際に使ってみる
 では実際にサンプルコードを用いて、Rubocopでコードのチェックを試してみます。
 サンプルコードは@<list>{rubocop_sample_before}で示したコードを用います。
 以下のような実行結果が表示されれば成功です。
@@ -223,10 +227,10 @@ p d
 //}
 
 == Rubocop指摘の修正方法
-前節で確認したRubocopの実行結果を修正して、「Rubyっぽい」コードにしてみましょう。
+前節で確認したRubocopの実行結果を参考にサンプルコードを修正して、「Rubyっぽい」コードにしてみましょう。
 
 === Rubocop実行結果の見方
-まず実行結果の味方について説明していきます。
+まず実行結果の見方について説明していきます。
 
 ==== 実行結果の概要
 一番最後の行にRubocop実行結果の概要が記載されています。
@@ -235,12 +239,12 @@ p d
 1 file inspected, 11 offenses detected
 //}
 
-これは1つのファイルをRubocopでチェックし、11個のエラーを見つけたということです。
+これは1つのファイルをRubocopでチェックし、11個のルール違反を見つけたということです。
 offense(s)はRubocopにおけるエラーを表しています。
 offenseには「犯罪」という意味がありますので、Rubocop(ロボコップ)つながりでoffenseという言葉が使われているのかもしれません。
 
-今回は1つファイルを指定して実行しているため、実施結果には「1 file inspected」と記載されています。
-仮に$ bundle exec rubocop .} という形で実行した場合には、カレントディレクトリ以下の全てのrbファイルがRubocopのチェック対象となります。
+今回は1つのファイルを指定して実行しているため、実施結果には「1 file inspected」と記載されています。
+仮に「$ bundle exec rubocop .」 という形で実行した場合には、カレントディレクトリ以下の全てのrbファイルがRubocopのチェック対象となります。
 その際は、XX files inspected という実行結果が表示されるでしょう。
 
 ==== offenseの詳細
@@ -270,15 +274,15 @@ a=1
 重大さはconvention, warning, error, fatal(この順に深刻度が高くなる)の4つに分類され、
 実施結果にはそれぞれの頭文字が表示されます。
 この場合は"C: "なのでconventionとなり、重大さは一番低い指摘であることが分かります。
-あまりにも指摘が多い場合は深刻度が高い指摘のみ対応する、という方針もありますので覚えておくと良いです。
+あまりにも指摘が多い場合は「深刻度が高い指摘のみ対応する」という方針もあります。
 
 「Layout/SpaceAroundOperators:」はRubocopのチェックルール名(Cop)は何か？を示しています。
 なおRubocopではチェックルールのことを「Cop」と読んでいます。
 チェックルールの判別と修正方法の調査に必要なので、指摘内容の中で一番重要な情報です。
 詳細は「Rubocop指摘の修正方法」を参考にしてください。
 
-「Surrounding space missing for operator =.」はCop(チェックルール)の概要を説明してくれています。
-簡単なCop(チェックルール)であればここを見るだけで直せることも多いです。
+「Surrounding space missing for operator =.」はCopの概要を説明してくれています。
+簡単なCopであればここを見るだけで直せることも多いです。
 
 === Rubocop指摘の修正方法
 では実際に指摘内容を修正していきます。
@@ -286,7 +290,8 @@ a=1
 前節でも説明に使った指摘内容を引き続き用います
 
 //cmd{
-target.rb:1:2: C: Layout/SpaceAroundOperators: Surrounding space missing for operator =.
+target.rb:1:2: C: Layout/SpaceAroundOperators: Surrounding space missing for operat
+or =.
 a=1
  ^
 //}
@@ -319,7 +324,7 @@ Inspecting 1 file
 //}
 
 さて今見てきた指摘はとても簡単な内容でした。
-ではこちらの指摘はどうでしょうか？
+では次の指摘はどうでしょうか？
 
 //cmd{
 target.rb:6:1: C: Style/ConditionalAssignment: Use the return of the conditional f
@@ -334,26 +339,25 @@ Use the return of the conditional for variable assignment and comparison.
 //}
 
 直訳すると
-「変数(variable)の代入(assignment)と比較(comparison)は条件文(conditional)の戻り値(return)を使え」
+「変数(variable)の代入(assignment)と比較(comparison)には条件文(conditional)の戻り値(return)を使え」
 となるでしょうか。
 
-コード上の指摘箇所を踏まえるとifの使い方に問題があるように思いますが、これだけだと具体的にどうすれば良いかはちょっと分かりません。
+コード上の指摘箇所を踏まえるとifの使い方に問題があるように思いますが、これだけだと具体的にどう直せば良いかはちょっと分かりません。
 
-そんな時は公式のドキュメントでCop(チェックルール)を調べてみましょう。
-この場合のCop(チェックルール)は、「Style/ConditionalAssignment」になります。
+そんな時は公式のドキュメントでCopを調べてみましょう。
+この場合のCopは、「Style/ConditionalAssignment」になります。
 
 これをRubocopの公式ドキュメント
 https://rubocop.readthedocs.io/en/stable/
 上の検索機能で検索してみます。
 
-すると以下のようなページに辿り着けます。
+すると次のページに辿り着きます。
 
-//image[RubocopDoc_Style_ConditionalAssignment][Rubocop の公式ドキュメント: Style/ConditionalAssignment]{
- 代替テキスト等
+//image[RubocopDoc_Style_ConditionalAssignment][Style/ConditionalAssignmentの解説]{
 //}
 
 色々書いてありますが、ひとまずサンプルコードに注目してください。
-「# bad」に記載されているようなコードを、「# good」の形に直すことが要求されているようです。
+「# bad」に記載されているようなコードを、「# good」の形に直すことが要求されています。
 
 ここで改めてtarget.rb:4:1を見てみると似たようなコードがあることに気づくと思います。
 
@@ -377,6 +381,9 @@ result = if a > 10
 //}
 
 改めてRubocopを実行すると、指摘が更に1つ減っていることが確認できます。
+
+Rubyのifは式なので値が戻ってくるのでこのような書き方が可能になります。
+Rubyの特徴を押さえた「Rubyっぽい」コードになりました。
 
 //cmd{
 $ bundle exec rubocop target.rb
@@ -417,8 +424,8 @@ p d
 これまでは手動での修正を説明してきましたが、自動修正機能を使うこともできます。
 --auto-correct(もしくは-a)オプションを追加して実行するだけです。
 
-ただしこの機能は、手動で修正できる指摘内容に対してのみ使用するべきです。
-修正内容に対して、どんなCop(チェックルール)に則って修正されたか分からない、という状況は望ましくありません。
+ただしこの機能は、自力で修正できる指摘内容に対してのみ使用するべきです。
+「修正内容がどんなCopに則った修正か分からない」という状況は望ましくありません。
 Rubocopの使い始めの時期は利用を控え、慣れてきた頃に活用すると良いと思います。
 
 //cmd{
@@ -490,8 +497,8 @@ p d
 1 file inspected, 15 offenses detected, 14 offenses corrected
 //}
 
-ただし全て修正できるわけではありません。残った修正は手動で行う必要があります。
-例えばtarget.rbの場合は1件だけ自動修正できない指摘内容が残ります。
+ただし--auto-correctオプションでoffenseを全て修正できるわけではありません。残った修正は手動で行う必要があります。
+例えばtarget.rbの場合は1件だけ自動修正できないoffenseが残ります。
 
 //cmd{
 $ rubocop target.rb
@@ -508,19 +515,16 @@ b = 3
 //}
 
 == Rubocopのカスタマイズ
-Rubocop実行時に適用するCop(チェックルール)はカスタマイズすることができます。
-カスタマイズは'.rubocop.yml'というファイルを用いて行います。
-プロジェクトのルートディレクトリに作成すると良いしょう。
+Rubocop実行時に適用するCopはカスタマイズできます。
+'.rubocop.yml'というファイルを用いてカスタマイズし、プロジェクトのルートディレクトリに作成すると良いでしょう。
 
-Rubocopは実行時に.rubocop.ymlの存在を確認し、
-.rubocop.ymlに記載された内容があればそちらを適用し、それ以外はRubocopのdefault設定を適用する、
+Rubocopは実行時に
+「.rubocop.ymlの存在確認＆記載内容の適用を行い、それ以外はRubocopのdefault設定を適用する」
 という振る舞いをします。
-(正確にはもう少し複雑ですが、分かりやすさ優先の説明をしています。詳細は公式ドキュメントをご参照ください)
 
 例えば前節の最後に登場した、
-Lint/UselessAssignment(rubocop --auto-correctで修正できなかったCop)をチェックの対象外にする場合には、
+Lint/UselessAssignmentをチェックの対象外にする場合には、
 以下のような.rubocop.ymlを作成します。
-(まぁこれを対象外にする人はいないと思いますが…)
 
 //cmd{
 Lint/UselessAssignment:
@@ -538,14 +542,14 @@ https://github.com/cookpad/styleguide/blob/master/.rubocop.yml
 https://github.com/airbnb/ruby/tree/master/rubocop-airbnb
 
 また本書の目的である「Rubyっぽい」を目指すという観点では、
-カスタマイズはなるべく最小限にするというのもアリかとも思います。
+カスタマイズはなるべく最小限にするのもアリかと思います。
 
 == 既存プロジェクトへRubocopを適用(--auto-config-genの利用): 
-既存プロジェクトにRubocopを導入する際には、指摘が多すぎて一度に対応することが困難、ということが起こるかもしれません。
+既存プロジェクトにRubocopを導入する際には、指摘が多すぎて一度に対応することが困難かもしれません。
 この本の対象読者(Ruby実務経験がおおよそ半年以内)の方が自己判断でRubocopを導入する状況で、
-数千件のRubocop指摘が出ました！ということはあまりないかもしれません。
+「数千件のRubocop指摘が出ました！」ということはあまりないかもしれません。
 それでもRubocopの指摘が100件もあったらうんざりしてしまうでしょう。
-それでRubocopの導入を諦めてしまったら元も子もありません。
+それでRubocopの導入を諦めたら元も子もありません。
 
 rubocop --auto-config-genによって.rubocop_todo.ymlを作成することで、
 既に存在するエラーを別ファイルに保存し、関連するCopを暫定的に無効にすることができます。
@@ -641,8 +645,149 @@ inherit_from: .rubocop_todo.yml
 その場合Excludeに記載されたファイルかに関わらず、そのCopに対するチェックは行われなくなります。
 これを避ける方法としては"--exclude-limit"オプションの利用があります。
 例えば以下のようにrubocop --auto-gen-configコマンドを実行することで、Copそのものが無効化される閾値を、
-デフォルトの15から変更することができます。
+デフォルトの15から変更できます。
 
 //emlist{
 bundle exec rubocop --auto-gen-config --exclude-limit=99999
 //}
+
+== Rubocopを部分的に無効化する
+前節では新規プロジェクトにRubocopを導入する際の便利なオプションを紹介しましたが、
+本節では、既にRubocop導入済みのプロジェクトにおいて、部分的にRubocopを無効化する方法を説明します。
+例えば.rubocop.ymlではStyle/LineLength(1行あたり何文字まで許容するか)のCopを100文字に設定しているが、
+ここはどうしても120文字位書きたい、といった際に便利です。
+
+やり方はとても簡単です。以下のように無効化したい箇所をコメントで囲うだけです。
+
+//emlist{
+  # rubocop:disable all
+  ***除外したいコード***
+  # rubocop:disable all
+//}
+
+試しに@<list>{rubocop_sample_before}のサンプルコードを利用して、Rubocopを部分的に無効化してみます。
+
+//listnum[rubocop_part_disable][部分的にRubocopを無効化]{
+# rubocop:disable all
+a=1
+b = 3
+c = [1, 2, 3, 4, 5]
+d = []
+
+if a > 10 then
+  result = 1
+else
+  result = 2
+end
+# rubocop:emable all
+
+if result == 1
+ p result
+end
+
+for num in c do
+  d << "#{num*10}"
+end
+
+p d
+//}
+
+//cmd{
+$ bundle exec rubocop target_commentout.rb 
+Inspecting 1 file
+C
+
+Offenses:
+
+target_commentout.rb:14:1: C: Style/IfUnlessModifier: Favor modifier if usage when having a single-line body. Another good alternative is the usage of control flow &&/||.
+if result == 1
+^^
+target_commentout.rb:15:1: C: Layout/IndentationWidth: Use 2 (not 1) spaces for indentation.
+ p result
+^
+target_commentout.rb:18:1: C: Style/For: Prefer each over for.
+for num in c do ...
+^^^^^^^^^^^^^^^
+target_commentout.rb:19:8: C: Style/UnneededInterpolation: Prefer to_s over string interpolation.
+  d << "#{num*10}"
+       ^^^^^^^^^^^
+target_commentout.rb:19:14: C: Layout/SpaceAroundOperators: Surrounding space missing for operator *.
+  d << "#{num*10}"
+             ^
+target_commentout.rb:22:4: C: Layout/TrailingBlankLines: Final newline missing.
+p d
+
+
+1 file inspected, 6 offenses detected
+//}
+
+結果を見ると指摘内容が14行目以降のものに限定されてお有り、
+「2.4.2 Rubocop を実際に使ってみる」で示した実行結果と比較して半分程度になっているのが見て取れます。
+
+また以下のように特定のCopに絞って無効化することもできます。
+(Style/IfUnlessModifierを無効化する場合)
+//emlist{
+  # rubocop:disable Style/IfUnlessModifier 
+  ***除外したいコード***
+  # rubocop:disable Style/IfUnlessModifier 
+//}
+
+//listnum[rubocop_part_cop_disable][部分的に特定のCopを無効化]{
+# rubocop:disable all
+a=1
+b = 3
+c = [1, 2, 3, 4, 5]
+d = []
+
+if a > 10 then
+  result = 1
+else
+  result = 2
+end
+# rubocop:emable all
+
+### 特定のCop無効化ここから
+# rubocop:disable Style/IfUnlessModifier 
+
+if result == 1
+ p result
+end
+
+for num in c do
+  d << "#{num*10}"
+end
+
+p d
+# rubocop:enable Style/IfUnlessModifier 
+//}
+
+//cmd{
+$ bundle exec rubocop target_commentout.rb 
+Inspecting 1 file
+C
+
+Offenses:
+
+target_commentout.rb:16:1: C: Layout/IndentationWidth: Use 2 (not 1) spaces for indentation.
+ p result
+^
+target_commentout.rb:19:1: C: Style/For: Prefer each over for.
+for num in c do ...
+^^^^^^^^^^^^^^^
+target_commentout.rb:20:8: C: Style/UnneededInterpolation: Prefer to_s over string interpolation.
+  d << "#{num*10}"
+       ^^^^^^^^^^^
+target_commentout.rb:20:14: C: Layout/SpaceAroundOperators: Surrounding space missing for operator *.
+  d << "#{num*10}"
+             ^
+target_commentout.rb:23:4: C: Layout/TrailingBlankLines: Final newline missing.
+p d
+
+
+1 file inspected, 5 offenses detected
+//}
+
+「Style/IfUnlessModifier」に関する指摘だけ無くなったことが分かります。
+
+基本的にあまり利用するべき機能ではありませんが、あまり厳密にRubocopを運用するのも辛いことが多いです。
+こういった回避策の存在も知っておくと便利です。
