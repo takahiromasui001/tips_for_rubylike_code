@@ -1,6 +1,6 @@
 = Ruby Sliverを受けてRubyの全体像を掴む
 前章までは特定のツールやクラスの使い方に関して説明してきましたが、
-本章では少し視点を変えて、Rubyの言語仕様全体を理解するための手段としてのRuby Silverを紹介します。
+本章では少し視点を変えて、Rubyの言語仕様全体を理解するための手段としてRuby Silverを紹介します。
 
 RubySilver(正式名称はRuby Association Certified Ruby Programmer Silver version 2.1：)は、
 Rubyアソシエーションが運営するRuby技術者認定試験の1つです。
