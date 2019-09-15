@@ -173,7 +173,7 @@ WEBサービスの形をとっておりスマホから簡単に取り組めま�
 
 ==== [改訂2版］Ruby技術者認定試験合格教本（Silver/Gold対応）Ruby公式資格教科書
 https://www.amazon.co.jp/dp/B0756VF9Y3/ref=dp-kindle-redirect?_encoding=
-UTF8&btkr=1(amazonのリンク)
+UTF8&btkr=1(amazonのリンクです)
 
 これだけ普通の書籍です。大きな本屋じゃないと入手できないかもしれません。
 amazon等を使えば確実に入手できます。最後に紹介していますが、Ruby Silverの対策本といえばまずコレ！と言われるくらい有名な書籍です。

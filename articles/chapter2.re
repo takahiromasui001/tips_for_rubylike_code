@@ -74,14 +74,14 @@ end
 p d
 //}
 
-まだまだ修正の余地はありますが、大分「Rubyっぽいコード」に近づいたと思います。
+まだまだ改善の余地はありますが、大分「Rubyっぽいコード」に近づいたと思います。
 どのような手順で修正を行うか？は章の後半で紹介します。
 
 == Rubocop導入前に意識しておきたい事
 Rubocop導入前に2点ほど意識していただきたいことがあります。
 
 === Rubocopの本来の用途
-本書ではRubocopを、自分が書いたコードを「Ruby」っぽくするという目的で利用しますが、
+本書ではRubocopを、自分が書いたコードを「Rubyっぽく」するという目的で利用しますが、
 これは一般的なRubocopの用途からは少しずれています。
 
 Rubocopは基本的にチーム開発におけるコーディングスタイルの統一を目的として利用されます。@<fn>{linter}
@@ -119,7 +119,7 @@ Rubocopを利用してより「Rubyっぽい」コードを目指すことには
 もしくは両方やっても問題ありません。
 
 === Gemfileに記載(bundlerを利用)
-Gemfileに以下のように記載した上で、bundle install を実行するだけインストールが完了します。とても簡単です。
+Gemfileに以下のように記載した上で、bundle install を実行するだけでインストールが完了します。とても簡単です。
 //cmd{ 
 gem 'rubocop', '~> 0.70.0', require: false
 //}
@@ -138,7 +138,7 @@ end
 使用しないRubocopが組み込まれることが無くなります。
 
 === gem install コマンド
-ターミナル上で以下のコマンドを実行するだけです。
+gem install コマンドを用いたRubocopのインストールは、ターミナル上で以下のコマンドを実行するだけです。
 //cmd{
 $ gem install 'rubocop'
 //}
@@ -251,12 +251,12 @@ offenseには「犯罪」という意味がありますので、Rubocop(ロボ�
 次にoffenseの詳細を見て行きたいと思います。
 実行結果の「Offenses:」と書かれた行から下にある11個のまとまりがそれに該当します。
 直感的にわかる箇所も多いですが、指摘を1つ抜き出して全て説明します。
-指摘からは以下3点が読み取れればOKです。
+指摘からは以下4点が読み取れればOKです。
 
  * 指摘箇所はどこか？
  * 指摘の深刻度はどの程度か？
- * チェックルール名(Cop)は何か？
- * チェックルールの概要
+ * Cop(チェックルール名)は何か？
+ * Copの概要
 
 //cmd{
 target.rb:1:2: C: Layout/SpaceAroundOperators: Surrounding space missing for opera
@@ -274,11 +274,11 @@ a=1
 重大さはconvention, warning, error, fatal(この順に深刻度が高くなる)の4つに分類され、
 実施結果にはそれぞれの頭文字が表示されます。
 この場合は"C: "なのでconventionとなり、重大さは一番低い指摘であることが分かります。
-あまりにも指摘が多い場合は「深刻度が高い指摘のみ対応する」という方針もあります。
+あまりにも指摘が多い場合は「深刻度が高い指摘のみ対応する」という方針をとることもあります。
 
-「Layout/SpaceAroundOperators:」はRubocopのチェックルール名(Cop)は何か？を示しています。
-なおRubocopではチェックルールのことを「Cop」と読んでいます。
-チェックルールの判別と修正方法の調査に必要なので、指摘内容の中で一番重要な情報です。
+「Layout/SpaceAroundOperators:」はRubocopのCop(チェックルール名)は何か？を示しています。
+(Rubocopではチェックルールのことを「Cop」と読んでいます。)
+指摘の判別と修正方法の調査に必要なので、指摘内容の中で一番重要な情報です。
 詳細は「Rubocop指摘の修正方法」を参考にしてください。
 
 「Surrounding space missing for operator =.」はCopの概要を説明してくれています。
@@ -296,18 +296,23 @@ a=1
  ^
 //}
 
-まずは「Cop(チェックルール)の概要」と「コード上の指摘箇所」を確認しましょう。これだけで解決できることも多いです。
+まずは「Copの概要」と「コード上の指摘箇所」を確認しましょう。これだけで解決できることも多いです。
 
- * Cop(チェックルール)の概要
+//cmd{
+(Copの概要)
 Surrounding space missing for operator =.
- * コード上の指摘箇所
+//}
+
+//cmd{
+(コード上の指摘箇所)
 a=1
+//}
 
 直訳すると「演算子"="の周囲にスペースが無い」となります。
 コードを見るとまさに"a=1"で正に"="の周囲にスペースがありませんね。
 それを踏まえて以下のように修正すればOKです。
 
-//cmd{
+//emlist{
 # 修正後
 a = 1
 //}
@@ -335,6 +340,7 @@ if a > 10 then ...
 
 まずは概要を見てみます。
 //cmd{
+(Copの概要)
 Use the return of the conditional for variable assignment and comparison.
 //}
 
@@ -346,10 +352,9 @@ Use the return of the conditional for variable assignment and comparison.
 
 そんな時は公式のドキュメントでCopを調べてみましょう。
 この場合のCopは、「Style/ConditionalAssignment」になります。
-
-これをRubocopの公式ドキュメント
+この文言をRubocopの公式ドキュメント
 https://rubocop.readthedocs.io/en/stable/
-上の検索機能で検索してみます。
+の検索機能で検索してみます。
 
 すると次のページに辿り着きます。
 
@@ -544,9 +549,9 @@ https://github.com/airbnb/ruby/tree/master/rubocop-airbnb
 また本書の目的である「Rubyっぽい」を目指すという観点では、
 カスタマイズはなるべく最小限にするのもアリかと思います。
 
-== 既存プロジェクトへRubocopを適用(--auto-config-genの利用): 
+== 既存プロジェクトへRubocopを適用(--auto-config-genの利用)
 既存プロジェクトにRubocopを導入する際には、指摘が多すぎて一度に対応することが困難かもしれません。
-この本の対象読者(Ruby実務経験がおおよそ半年以内)の方が自己判断でRubocopを導入する状況で、
+本書の対象読者(Ruby実務経験がおおよそ半年以内)の方が自己判断でRubocopを導入する状況で、
 「数千件のRubocop指摘が出ました！」ということはあまりないかもしれません。
 それでもRubocopの指摘が100件もあったらうんざりしてしまうでしょう。
 それでRubocopの導入を諦めたら元も子もありません。
@@ -616,7 +621,7 @@ Layout/IndentationWidth:
   Exclude:
     - 'target.rb'
 //}
-1行目はCop(チェックルール)の名前です。2行目3行目は 'target.rb'を除外する(Exclude)という内容です。
+1行目はCopの名前です。2行目3行目は 'target.rb'を除外する(Exclude)という内容です。
 まとめると、target.rbを「Layout/IndentationWidth:」の確認対象から除外する、という意味になります。
 その結果target.rbに既に存在する「Layout/IndentationWidth:」の確認は今後行われなくなります。
 この設定が7つのoffenseそれぞれに対して行われているのが.rubocop_todo.ymlです。
@@ -637,7 +642,7 @@ inherit_from: .rubocop_todo.yml
 2点注意してほしいことがあります。
 
 1点目はファイル単位でCopが除外されているということです。
-つまり.ruboco_todo.ymlでExcludeとして記載されたファイルに関しては、
+つまり.rubocop_todo.ymlでExcludeとして記載されたファイルに関しては、
 今後新しい修正に対してもCopは適用されなくなります。
 例えば上の例であれば、Layout/IndentationWidth:に該当するコードがtarget.rbに新しく追加されたとしても、Rubocopは検知してくれません。
 
@@ -652,7 +657,6 @@ bundle exec rubocop --auto-gen-config --exclude-limit=99999
 //}
 
 == Rubocopを部分的に無効化する
-前節では新規プロジェクトにRubocopを導入する際の便利なオプションを紹介しましたが、
 本節では、既にRubocop導入済みのプロジェクトにおいて、部分的にRubocopを無効化する方法を説明します。
 例えば.rubocop.ymlではStyle/LineLength(1行あたり何文字まで許容するか)のCopを100文字に設定しているが、
 ここはどうしても120文字位書きたい、といった際に便利です。
@@ -721,8 +725,9 @@ p d
 1 file inspected, 6 offenses detected
 //}
 
-結果を見ると指摘内容が14行目以降のものに限定されてお有り、
-「2.4.2 Rubocop を実際に使ってみる」で示した実行結果と比較して半分程度になっているのが見て取れます。
+結果を見ると指摘内容が14行目以降のものに限定されています。
+「2.4.2 Rubocop を実際に使ってみる」で示した実行結果(1 file inspected, 11 offenses detected
+)と比較して指摘内容が半分程度になっているのが見て取れます。
 
 また以下のように特定のCopに絞って無効化することもできます。
 (Style/IfUnlessModifierを無効化する場合)
